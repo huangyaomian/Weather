@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.style.BulletSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,24 +135,45 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onClick(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        WeatherBean.ResultsBean.IndexBean indexBean;
+        String msg = null;
         switch (view.getId()){
             case R.id.frag_index_dress:
                 builder.setTitle("穿衣指數");
-                WeatherBean.ResultsBean.IndexBean indexBean = indexList.get(0);
-                String a = indexBean.getZs() + "\n" + indexBean.getDes();
+                indexBean = indexList.get(0);
+                msg = indexBean.getZs() + "\n" + indexBean.getDes();
+                builder.setMessage(msg);
+                builder.setPositiveButton("确定", null);
                 break;
             case R.id.frag_index_car:
-
+                builder.setTitle("洗车指数");
+                indexBean = indexList.get(1);
+                msg = indexBean.getZs() + "\n" + indexBean.getDes();
+                builder.setMessage(msg);
+                builder.setPositiveButton("确定", null);
                 break;
             case R.id.frag_index_cold:
-
+                builder.setTitle("感冒指数");
+                indexBean = indexList.get(2);
+                msg = indexBean.getZs() + "\n" + indexBean.getDes();
+                builder.setMessage(msg);
+                builder.setPositiveButton("确定", null);
                 break;
             case R.id.frag_index_sport:
-
+                builder.setTitle("运动指数");
+                indexBean = indexList.get(3);
+                msg = indexBean.getZs() + "\n" + indexBean.getDes();
+                builder.setMessage(msg);
+                builder.setPositiveButton("确定", null);
                 break;
             case R.id.frag_index_light:
-
+                builder.setTitle("紫外线指数");
+                indexBean = indexList.get(4);
+                msg = indexBean.getZs() + "\n" + indexBean.getDes();
+                builder.setMessage(msg);
+                builder.setPositiveButton("确定", null);
                 break;
         }
+        builder.create().show();
     }
 }
