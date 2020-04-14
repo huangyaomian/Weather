@@ -138,7 +138,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
             case R.id.frag_index_dress:
                 builder.setTitle("穿衣指數");
                 WeatherBean.ResultsBean.IndexBean indexBean = indexList.get(0);
-                indexBean.getZs() + "\n" + indexBean.getDes();
+                //indexBean.getZs() + "\n" + indexBean.getDes();
                 break;
             case R.id.frag_index_car:
 
