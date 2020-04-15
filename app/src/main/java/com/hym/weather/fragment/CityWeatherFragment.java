@@ -30,7 +30,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
     private ImageView dayIv;
     private LinearLayout futureLayout;
     List<WeatherBean.ResultsBean.IndexBean> indexList;
-    private String url1 = "http://api.map.baidu.com/telematics/v3/weather?location=";
+    private String url1 = "https://api.map.baidu.com/telematics/v3/weather?location=";
     private String url2 = "&output=json&ak=FkPhtMBK0HTIQNh7gG4cNUttSTyr0nzo";
 
 
