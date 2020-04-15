@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -113,13 +114,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
 
     @Override
     public void onClick(View view) {
+        Intent intent = new Intent();
         switch (view.getId()){
             case R.id.main_iv_add:
-
+                intent.setClass(this,CityManagerActivity.class);
                 break;
             case R.id.main_iv_more:
 
                 break;
         }
+        startActivity(intent);
     }
 }
