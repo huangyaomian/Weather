@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.hym.weather.db.DBManager;
 import com.hym.weather.fragment.CityFragmentPagerAdapter;
 import com.hym.weather.fragment.CityWeatherFragment;
 
@@ -41,13 +42,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
         moreTv.setOnClickListener(this);
 
         fragmentList = new ArrayList<>();
-        cityList = new ArrayList<>();
+        cityList = DBManager.queryAllCityName();
         imgList = new ArrayList<>();
 
         if (cityList.size() == 0) {
             cityList.add("深圳");
-            cityList.add("汕头");
-            cityList.add("沈阳");
         }
         //初始换viewpager页面的方法
         initPager();

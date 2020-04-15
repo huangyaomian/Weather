@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.text.style.BulletSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.hym.weather.R;
 import com.hym.weather.bean.WeatherBean;
+import com.hym.weather.db.DBManager;
+import com.hym.weather.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -33,6 +36,8 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
     private String url1 = "https://api.map.baidu.com/telematics/v3/weather?location=";
     private String url2 = "&output=json&ak=FkPhtMBK0HTIQNh7gG4cNUttSTyr0nzo";
 
+    String city;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,7 +47,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
 
         //可以通過activity傳值獲取到當前fragment加載的是哪個地方的天氣情況
         Bundle bundle = getArguments();
-        String city = bundle.getString("city");
+        city = bundle.getString("city");
         String url = url1 + city + url2;
         //調用父類獲取數據的方法
         loadData(url);
@@ -55,6 +60,12 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
         super.onSuccess(result);
         //解析並展示數據
         parseShowData(result);
+        //更新数据
+        int i = DBManager.updateInfoByCity(city, result);
+        if (i<=0) {
+            //更新数据库失败，说明没有这条程序是信息，增加这个城市记录
+            DBManager.addCityInfo(city,result);
+        }
     }
 
 
@@ -62,6 +73,12 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onError(Throwable ex, boolean isOnCallback) {
         super.onError(ex, isOnCallback);
+        if (!TextUtils.isEmpty(city)) {
+            String s = DBManager.queryInfoByCity(city);
+            if (!TextUtils.isEmpty(s)) {
+                parseShowData(s);
+            }
+        }
     }
 
     private void parseShowData(String result) {
@@ -99,7 +116,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
             idateTv.setText(dataBean.getDate());
             iconTv.setText(dataBean.getWeather());
             itemprangeTv.setText(dataBean.getTemperature());
-            Picasso.with(getActivity()).load(dataBean.getDayPictureUrl()).into(iIv);
+            Picasso.with(getActivity()).load(dataBean.getDayPictureUrl()).centerCrop().transform(new CircleTransform()).into(iIv);
             
         }
 
