@@ -17,7 +17,7 @@ import java.util.List;
 public class CityManagerAdapter extends BaseAdapter {
 
     Context context;
-    List<DatabaseBean> mDatas;
+    List<DatabaseBean> mDatas;//顯示列表數據源
     ViewHolder holder;
 
     public CityManagerAdapter(Context context, List<DatabaseBean> mDatas) {

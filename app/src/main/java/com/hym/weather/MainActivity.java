@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
 
         if (cityList.size() == 0) {
             cityList.add("深圳");
+            cityList.add("杭州");
+            cityList.add("北京");
+            cityList.add("广州");
         }
         //初始换viewpager页面的方法
         initPager();

@@ -51,7 +51,6 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
         String url = url1 + city + url2;
         //調用父類獲取數據的方法
         loadData(url);
-
         return view;
     }
 
@@ -116,7 +115,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
             idateTv.setText(dataBean.getDate());
             iconTv.setText(dataBean.getWeather());
             itemprangeTv.setText(dataBean.getTemperature());
-            Picasso.with(getActivity()).load(dataBean.getDayPictureUrl()).centerCrop().transform(new CircleTransform()).into(iIv);
+            Picasso.with(getActivity()).load(dataBean.getDayPictureUrl()).into(iIv);
             
         }
 

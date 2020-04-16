@@ -61,4 +61,18 @@ public class DBManager {
         return count;
     }
 
+    //查詢數據庫當中的全部信息
+    public static List<DatabaseBean> queryAllInfo(){
+        Cursor cursor = database.query("info", null, null, null, null, null, null);
+        List<DatabaseBean> list = new ArrayList<>();
+        while (cursor.moveToNext()){
+            int id = cursor.getInt(cursor.getColumnIndex("_id"));
+            String city = cursor.getString(cursor.getColumnIndex("city"));
+            String content = cursor.getString(cursor.getColumnIndex("content"));
+            DatabaseBean databaseBean = new DatabaseBean(id, city, content);
+            list.add(databaseBean);
+        }
+        return list;
+    }
+
 }

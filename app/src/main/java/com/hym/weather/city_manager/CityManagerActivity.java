@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -13,13 +14,17 @@ import com.hym.weather.R;
 import com.hym.weather.db.DBManager;
 import com.hym.weather.db.DatabaseBean;
 
+import org.w3c.dom.CDATASection;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class CityManagerActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView addIv,backIv,deleteIv;
     ListView cityLv;
-    List<DatabaseBean> mDatas;
+    List<DatabaseBean> mDatas;//顯示列表數據源
+    private CityManagerAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,13 +32,26 @@ public class CityManagerActivity extends AppCompatActivity implements View.OnCli
         addIv = findViewById(R.id.city_iv_add);
         backIv = findViewById(R.id.city_iv_back);
         deleteIv = findViewById(R.id.city_iv_delete);
-        cityLv = findViewById(R.id.city_Iv);
+        cityLv = findViewById(R.id.city_lv);
         mDatas = new ArrayList<>();
+        Log.d("hym", "onCreate: "+mDatas.toString());
         //设置点击监听事件
         addIv.setOnClickListener(this);
         backIv.setOnClickListener(this);
         deleteIv.setOnClickListener(this);
         //设置适配器
+        adapter = new CityManagerAdapter(this, mDatas);
+        cityLv.setAdapter(adapter);
+    }
+
+    //獲取數據庫當中真是數據源，添加到原有數據源當中，提示適配器更新
+    @Override
+    protected void onResume() {
+        super.onResume();
+        List<DatabaseBean> databaseBeans = DBManager.queryAllInfo();
+        mDatas.clear();
+        mDatas.addAll(databaseBeans);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
