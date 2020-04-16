@@ -1,12 +1,16 @@
-package com.hym.weather;
+package com.hym.weather.city_manager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.hym.weather.R;
+import com.hym.weather.db.DBManager;
 import com.hym.weather.db.DatabaseBean;
 
 import java.util.ArrayList;
@@ -34,15 +38,23 @@ public class CityManagerActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()){
             case R.id.city_iv_add:
-
+                int cityCount = DBManager.getCityCount();
+                if (cityCount<5){
+                    intent = new Intent(this, SearchCityActivity.class);
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(this,"存储城市数量已达上限，请删除后在增加！",Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.city_iv_back:
-
+                finish();
                 break;
-            case R.id.city_iv_delete
-
+            case R.id.city_iv_delete:
+                intent = new Intent(this, DeleteCityActivity.class);
+                startActivity(intent);
                 break;
 
         }

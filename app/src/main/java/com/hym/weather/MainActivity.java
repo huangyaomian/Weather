@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.hym.weather.city_manager.CityManagerActivity;
 import com.hym.weather.db.DBManager;
 import com.hym.weather.fragment.CityFragmentPagerAdapter;
 import com.hym.weather.fragment.CityWeatherFragment;
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
         Intent intent = new Intent();
         switch (view.getId()){
             case R.id.main_iv_add:
-                intent.setClass(this,CityManagerActivity.class);
+                intent.setClass(this, CityManagerActivity.class);
                 break;
             case R.id.main_iv_more:
 
