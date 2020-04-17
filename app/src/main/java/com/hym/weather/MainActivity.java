@@ -133,4 +133,26 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
         }
         startActivity(intent);
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        //獲取數據庫當中還剩下的城市集合
+        List<String> list = DBManager.queryAllCityName();
+        if (list.size() == 0){
+            list.add("北京");
+        }
+        cityList.clear();//重新加載之前，清空原本數據源
+        cityList.addAll(list);
+        //剩餘城市也要創建對應的fragement頁面
+        fragmentList.clear();
+        initPager();
+        adapter.notifyDataSetChanged();
+        //頁面數量發生改變，治時期的數量也會發生變化，重新設置添加指示器
+        imgList.clear();
+        pointLayout.removeAllViews();//將佈局中所有元素全部移除
+        initPoint();
+        mainVp.setCurrentItem(fragmentList.size()-1);
+
+    }
 }
