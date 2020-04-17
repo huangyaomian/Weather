@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
                 intent.setClass(this, CityManagerActivity.class);
                 break;
             case R.id.main_iv_more:
-
+                intent.setClass(this, MoreActivity.class);
                 break;
         }
         startActivity(intent);

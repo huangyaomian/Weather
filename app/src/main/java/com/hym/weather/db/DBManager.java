@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +79,11 @@ public class DBManager {
     //根據城市名稱，刪除這個城市在數據庫當中的數據
     public static int deleteInfoCity(String city){
         return database.delete("info","city=?",new String[]{city});
+    }
+
+    //清空info表，不刪除表
+    public static void deleteAllInfo(){
+        database.execSQL("delete from info");
     }
 
 }
