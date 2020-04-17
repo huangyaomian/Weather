@@ -15,7 +15,7 @@
         app:contentPadding="10dp">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="60dp">
             <ImageView
                 android:layout_width="wrap_content"
@@ -35,8 +35,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 />
-
-
         </RelativeLayout>
 
 

@@ -75,4 +75,9 @@ public class DBManager {
         return list;
     }
 
+    //根據城市名稱，刪除這個城市在數據庫當中的數據
+    public static int deleteInfoCity(String city){
+        return database.delete("info","city=?",new String[]{city});
+    }
+
 }
