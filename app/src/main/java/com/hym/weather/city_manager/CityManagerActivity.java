@@ -14,7 +14,6 @@ import com.hym.weather.R;
 import com.hym.weather.db.DBManager;
 import com.hym.weather.db.DatabaseBean;
 
-import org.w3c.dom.CDATASection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +47,7 @@ public class CityManagerActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d("hym", "进入onResume方法 ");
         List<DatabaseBean> databaseBeans = DBManager.queryAllInfo();
         mDatas.clear();
         mDatas.addAll(databaseBeans);

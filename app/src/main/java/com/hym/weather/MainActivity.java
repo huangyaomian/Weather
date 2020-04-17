@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,9 +50,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
 
         if (cityList.size() == 0) {
             cityList.add("深圳");
-            cityList.add("杭州");
-            cityList.add("北京");
-            cityList.add("广州");
+        }
+        //因为可能搜索界面点击跳转到此界面会传值
+        Intent intent = getIntent();
+        String city = intent.getStringExtra("city");
+        if (!cityList.contains(city) && !TextUtils.isEmpty(city)) {
+            cityList.add(city);
         }
         //初始换viewpager页面的方法
         initPager();
