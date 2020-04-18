@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
     //viewpager的数据源
     List<Fragment> fragmentList;
     //表示需要显示的城市的集合
-    List<String> cityList;
+    List<String> cityList = DBManager.queryAllCityName();
     //表示viewpager的页数指数器显示的集合
     List<ImageView> imgList;
     private SharedPreferences pref;
@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
                 moreTv.setOnClickListener(MainActivity.this);
 
                 fragmentList = new ArrayList<>();
-                cityList = DBManager.queryAllCityName();
                 imgList = new ArrayList<>();
 
                 if (cityList.size() == 0) {
