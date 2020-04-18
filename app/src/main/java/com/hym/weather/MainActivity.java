@@ -6,11 +6,13 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.hym.weather.city_manager.CityManagerActivity;
 import com.hym.weather.db.DBManager;
@@ -24,14 +26,18 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
 
     private ImageView addCityIv,moreTv;
     private LinearLayout pointLayout;
+    RelativeLayout outLayout;
     private ViewPager mainVp;
-    CityFragmentPagerAdapter adapter;
+    private CityFragmentPagerAdapter adapter;
     //viewpager的数据源
     List<Fragment> fragmentList;
     //表示需要显示的城市的集合
     List<String> cityList;
     //表示viewpager的页数指数器显示的集合
     List<ImageView> imgList;
+    private SharedPreferences pref;
+    private int bgNum;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +45,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
         addCityIv = findViewById(R.id.main_iv_add);
         moreTv = findViewById(R.id.main_iv_more);
         pointLayout = findViewById(R.id.main_layout_point);
+        outLayout = findViewById(R.id.main_out_layout);
         mainVp = findViewById(R.id.main_vp);
+        //设置壁纸
+        exchangeBg();
+
         //添加點擊事件
         addCityIv.setOnClickListener(this);
         moreTv.setOnClickListener(this);
@@ -154,5 +164,22 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
         initPoint();
         mainVp.setCurrentItem(fragmentList.size()-1);
 
+    }
+
+    //换壁纸的函数
+    public void exchangeBg(){
+        pref = getSharedPreferences("bg_pref", MODE_PRIVATE);
+        bgNum = pref.getInt("bg", 2);
+        switch (bgNum){
+            case 0:
+                outLayout.setBackgroundResource(R.mipmap.bg);
+                break;
+            case 1:
+                outLayout.setBackgroundResource(R.mipmap.bg5);
+                break;
+            case 2:
+                outLayout.setBackgroundResource(R.mipmap.bg3);
+                break;
+        }
     }
 }

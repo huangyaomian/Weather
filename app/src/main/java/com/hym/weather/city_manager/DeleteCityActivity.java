@@ -52,6 +52,7 @@ public class DeleteCityActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.delete_iv_error:
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("提示信息").setMessage("您確定要捨棄更改嗎？").setPositiveButton("捨棄更改", new DialogInterface.OnClickListener() {
                     @Override

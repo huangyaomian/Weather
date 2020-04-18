@@ -2,6 +2,7 @@ package com.hym.weather.fragment;
 
 
 import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.icu.util.BuddhistCalendar;
 import android.os.Bundle;
 
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -25,6 +27,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -32,6 +36,9 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
     private TextView tempTv,cityTv,conditionTv,windTv,tempRangeTv,dateTv,clothTndexTv,carIndexTv,colIndexTv,sportIndexTv,raysIndexTv;
     private ImageView dayIv;
     private LinearLayout futureLayout;
+    private ScrollView outLayout;
+    private SharedPreferences pref;
+    private int bgNum;
     List<WeatherBean.ResultsBean.IndexBean> indexList;
     private String url1 = "https://api.map.baidu.com/telematics/v3/weather?location=";
     private String url2 = "&output=json&ak=FkPhtMBK0HTIQNh7gG4cNUttSTyr0nzo";
@@ -44,7 +51,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_city_weather, container, false);
         initView(view);
-
+        exchangeBg();//设置壁纸
         //可以通過activity傳值獲取到當前fragment加載的是哪個地方的天氣情況
         Bundle bundle = getArguments();
         city = bundle.getString("city");
@@ -134,7 +141,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
         colIndexTv = view.findViewById(R.id.frag_index_cold);
         sportIndexTv = view.findViewById(R.id.frag_index_sport);
         raysIndexTv = view.findViewById(R.id.frag_index_light);
-
+        outLayout = view.findViewById(R.id.frag_out_layout);
         dayIv = view.findViewById(R.id.frag_iv_icon);
         futureLayout = view.findViewById(R.id.frag_center_layout);
 
@@ -191,5 +198,22 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
                 break;
         }
         builder.create().show();
+    }
+
+    //换壁纸的函数
+    public void exchangeBg(){
+        pref = getActivity().getSharedPreferences("bg_pref", MODE_PRIVATE);
+        bgNum = pref.getInt("bg", 2);
+        switch (bgNum){
+            case 0:
+                outLayout.setBackgroundResource(R.mipmap.bg);
+                break;
+            case 1:
+                outLayout.setBackgroundResource(R.mipmap.bg5);
+                break;
+            case 2:
+                outLayout.setBackgroundResource(R.mipmap.bg3);
+                break;
+        }
     }
 }

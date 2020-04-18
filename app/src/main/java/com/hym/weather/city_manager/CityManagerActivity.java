@@ -3,11 +3,13 @@ package com.hym.weather.city_manager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.hym.weather.R;
@@ -21,8 +23,10 @@ import java.util.List;
 public class CityManagerActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView addIv,backIv,deleteIv;
     ListView cityLv;
+    RelativeLayout outLayout;
     List<DatabaseBean> mDatas;//顯示列表數據源
     private CityManagerAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,7 @@ public class CityManagerActivity extends AppCompatActivity implements View.OnCli
         backIv = findViewById(R.id.city_iv_back);
         deleteIv = findViewById(R.id.city_iv_delete);
         cityLv = findViewById(R.id.city_lv);
+        outLayout = findViewById(R.id.city_out_layout);
         mDatas = new ArrayList<>();
         Log.d("hym", "onCreate: "+mDatas.toString());
         //设置点击监听事件
@@ -78,4 +83,6 @@ public class CityManagerActivity extends AppCompatActivity implements View.OnCli
         }
 
     }
+
+
 }
