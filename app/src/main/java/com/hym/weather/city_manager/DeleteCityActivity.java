@@ -22,6 +22,7 @@ public class DeleteCityActivity extends AppCompatActivity implements View.OnClic
     List<String> mDatas;
     List<String> deleteCitys;
     private DeleteCityAdapter deleteCityAdapter;
+    public static boolean isDeleteDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,22 +47,26 @@ public class DeleteCityActivity extends AppCompatActivity implements View.OnClic
         final List<String> cityList = DBManager.queryAllCityName();
         mDatas.addAll(cityList);
         deleteCityAdapter.notifyDataSetChanged();
+        isDeleteDialog=false;
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.delete_iv_error:
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("提示信息").setMessage("您確定要捨棄更改嗎？").setPositiveButton("捨棄更改", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                });
-                builder.setNeutralButton("取消",null);
-                builder.create().show();
+                if (isDeleteDialog) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("提示信息").setMessage("您確定要捨棄更改嗎？").setPositiveButton("捨棄更改", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    });
+                    builder.setNeutralButton("取消",null);
+                    builder.create().show();
+                }else {
+                    finish();
+                }
                 break;
             case R.id.delete_iv_right:
                 for (int i = 0; i < deleteCitys.size(); i++) {

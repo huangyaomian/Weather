@@ -19,6 +19,7 @@ public class DeleteCityAdapter extends BaseAdapter {
     List<String> mDatas;
     List<String> deleteCity;
 
+
     public DeleteCityAdapter(Context context, List<String> mDatas, List<String> deleteCity) {
         this.context = context;
         this.mDatas = mDatas;
@@ -59,6 +60,7 @@ public class DeleteCityAdapter extends BaseAdapter {
                 deleteCity.add(city);
             //刪除了提示適配器更新
                 notifyDataSetChanged();
+                DeleteCityActivity.isDeleteDialog =true;
             }
         });
         return view;

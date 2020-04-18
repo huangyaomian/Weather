@@ -1,23 +1,36 @@
 package com.hym.weather;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.google.gson.Gson;
+import com.hym.weather.bean.CityNameBean;
 import com.hym.weather.city_manager.CityManagerActivity;
 import com.hym.weather.db.DBManager;
 import com.hym.weather.fragment.CityFragmentPagerAdapter;
 import com.hym.weather.fragment.CityWeatherFragment;
+import com.hym.weather.utils.LocationUtils;
+
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,43 +54,67 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        addCityIv = findViewById(R.id.main_iv_add);
-        moreTv = findViewById(R.id.main_iv_more);
-        pointLayout = findViewById(R.id.main_layout_point);
-        outLayout = findViewById(R.id.main_out_layout);
-        mainVp = findViewById(R.id.main_vp);
-        //设置壁纸
-        exchangeBg();
+        String path = "https://api.map.baidu.com/geocoder?output=json&location=32.913542,116.379763&ak=esNPFDwwsXWtsQfw4NMNmur1";
+        RequestParams params = new RequestParams(path);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                CityNameBean cityNameBean = new Gson().fromJson(result, CityNameBean.class);
+                String cityName = cityNameBean.getResult().getAddressComponent().getCity();
+                setContentView(R.layout.activity_main);
+                addCityIv = findViewById(R.id.main_iv_add);
+                moreTv = findViewById(R.id.main_iv_more);
+                pointLayout = findViewById(R.id.main_layout_point);
+                outLayout = findViewById(R.id.main_out_layout);
+                mainVp = findViewById(R.id.main_vp);
+                //设置壁纸
+                exchangeBg();
+                //添加點擊事件
+                addCityIv.setOnClickListener(MainActivity.this);
+                moreTv.setOnClickListener(MainActivity.this);
 
-        //添加點擊事件
-        addCityIv.setOnClickListener(this);
-        moreTv.setOnClickListener(this);
+                fragmentList = new ArrayList<>();
+                cityList = DBManager.queryAllCityName();
+                imgList = new ArrayList<>();
 
-        fragmentList = new ArrayList<>();
-        cityList = DBManager.queryAllCityName();
-        imgList = new ArrayList<>();
+                if (cityList.size() == 0) {
+                    cityList.add(cityName);
+                }
+                //因为可能搜索界面点击跳转到此界面会传值
+                Intent intent = getIntent();
+                String city = intent.getStringExtra("city");
+                if (!cityList.contains(city) && !TextUtils.isEmpty(city)) {
+                    cityList.add(city);
+                }
+                //初始换viewpager页面的方法
+                initPager();
+                adapter = new CityFragmentPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.POSITION_UNCHANGED, fragmentList);
+                mainVp.setAdapter(adapter);
+                //创建小圆点指示器
+                initPoint();
+                //设置默认显示最后一个添加城市的信息
+                mainVp.setCurrentItem(fragmentList.size()-1);
 
-        if (cityList.size() == 0) {
-            cityList.add("深圳");
-        }
-        //因为可能搜索界面点击跳转到此界面会传值
-        Intent intent = getIntent();
-        String city = intent.getStringExtra("city");
-        if (!cityList.contains(city) && !TextUtils.isEmpty(city)) {
-            cityList.add(city);
-        }
-        //初始换viewpager页面的方法
-        initPager();
-        adapter = new CityFragmentPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.POSITION_UNCHANGED, fragmentList);
-        mainVp.setAdapter(adapter);
-        //创建小圆点指示器
-        initPoint();
-        //设置默认显示最后一个添加城市的信息
-        mainVp.setCurrentItem(fragmentList.size()-1);
+                //设置viewpager页面监听
+                setPagerListener();
+            }
 
-        //设置viewpager页面监听
-        setPagerListener();
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+
     }
 
     private void setPagerListener() {
@@ -182,4 +219,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
                 break;
         }
     }
+
+
+
+
 }
