@@ -54,66 +54,86 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String path = "https://api.map.baidu.com/geocoder?output=json&location=32.913542,116.379763&ak=esNPFDwwsXWtsQfw4NMNmur1";
-        RequestParams params = new RequestParams(path);
-        x.http().get(params, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                CityNameBean cityNameBean = new Gson().fromJson(result, CityNameBean.class);
-                String cityName = cityNameBean.getResult().getAddressComponent().getCity();
-                setContentView(R.layout.activity_main);
-                addCityIv = findViewById(R.id.main_iv_add);
-                moreTv = findViewById(R.id.main_iv_more);
-                pointLayout = findViewById(R.id.main_layout_point);
-                outLayout = findViewById(R.id.main_out_layout);
-                mainVp = findViewById(R.id.main_vp);
-                //设置壁纸
-                exchangeBg();
-                //添加點擊事件
-                addCityIv.setOnClickListener(MainActivity.this);
-                moreTv.setOnClickListener(MainActivity.this);
-
-                fragmentList = new ArrayList<>();
-                imgList = new ArrayList<>();
-
-                if (cityList.size() == 0) {
+        setContentView(R.layout.activity_main);
+        if (cityList.size() == 0) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+            LocationUtils location = new LocationUtils(this);
+            Log.e("hymm","getLongitude" +location.getlocation().getLongitude());
+            String path = "https://api.map.baidu.com/geocoder?output=json&location=" + location.getlocation().getLatitude() +","+ location.getlocation().getLongitude() +"&ak=esNPFDwwsXWtsQfw4NMNmur1";
+            RequestParams params = new RequestParams(path);
+            x.http().get(params, new Callback.CommonCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    CityNameBean cityNameBean = new Gson().fromJson(result, CityNameBean.class);
+                    String cityName = cityNameBean.getResult().getAddressComponent().getCity();
                     cityList.add(cityName);
+                    code();//代码提取
                 }
-                //因为可能搜索界面点击跳转到此界面会传值
-                Intent intent = getIntent();
-                String city = intent.getStringExtra("city");
-                if (!cityList.contains(city) && !TextUtils.isEmpty(city)) {
-                    cityList.add(city);
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+
                 }
-                //初始换viewpager页面的方法
-                initPager();
-                adapter = new CityFragmentPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.POSITION_UNCHANGED, fragmentList);
-                mainVp.setAdapter(adapter);
-                //创建小圆点指示器
-                initPoint();
-                //设置默认显示最后一个添加城市的信息
-                mainVp.setCurrentItem(fragmentList.size()-1);
 
-                //设置viewpager页面监听
-                setPagerListener();
-            }
+                @Override
+                public void onCancelled(CancelledException cex) {
 
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
+                }
 
-            }
+                @Override
+                public void onFinished() {
 
-            @Override
-            public void onCancelled(CancelledException cex) {
+                }
+            });
+        }else {
+            code();
+        }
 
-            }
+    }
 
-            @Override
-            public void onFinished() {
+    private void code() {
+        //初始化空间
+        initView();
+        //设置壁纸
+        exchangeBg();
+        //添加點擊事件
+        addCityIv.setOnClickListener(MainActivity.this);
+        moreTv.setOnClickListener(MainActivity.this);
 
-            }
-        });
+        fragmentList = new ArrayList<>();
+        imgList = new ArrayList<>();
 
+
+        //因为可能搜索界面点击跳转到此界面会传值
+        Intent intent = getIntent();
+        String city = intent.getStringExtra("city");
+        if (!cityList.contains(city) && !TextUtils.isEmpty(city)) {
+            cityList.add(city);
+        }
+        //初始换viewpager页面的方法
+        initPager();
+        adapter = new CityFragmentPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.POSITION_UNCHANGED, fragmentList);
+        mainVp.setAdapter(adapter);
+        //创建小圆点指示器
+        initPoint();
+        //设置默认显示最后一个添加城市的信息
+        mainVp.setCurrentItem(fragmentList.size()-1);
+
+        //设置viewpager页面监听
+        setPagerListener();
+    }
+
+    //
+
+    //初始化控件
+    private void initView() {
+        addCityIv = findViewById(R.id.main_iv_add);
+        moreTv = findViewById(R.id.main_iv_more);
+        pointLayout = findViewById(R.id.main_layout_point);
+        outLayout = findViewById(R.id.main_out_layout);
+        mainVp = findViewById(R.id.main_vp);
     }
 
     private void setPagerListener() {

@@ -17,6 +17,8 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.util.List;
+
 public class LocationUtils {
     public  String cityName = null;   //城市名
     private  String path1 = "http://api.map.baidu.com/geocoder?output=json&location=";
@@ -36,7 +38,7 @@ public class LocationUtils {
         //实例化一个LocationManager对象
         locationManager = (LocationManager) context.getSystemService(serviceName);
         //provider的类型
-        String provider = LocationManager.NETWORK_PROVIDER;
+        String provider = LocationManager.GPS_PROVIDER;
 
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_LOW);    //低精度   高精度：ACCURACY_FINE
@@ -49,6 +51,23 @@ public class LocationUtils {
         Location location = locationManager.getLastKnownLocation(provider);
         return location;
     }
+
+    private Location getLastKnownLocation(LocationManager locationManager) {
+        List<String> providers = locationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            @SuppressLint("MissingPermission") Location l = locationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+        return bestLocation;
+    }
+
 
     //根据location对象回去当前城市名称
     public String getCityName() {

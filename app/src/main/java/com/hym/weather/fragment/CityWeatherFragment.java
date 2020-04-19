@@ -23,6 +23,7 @@ import com.hym.weather.R;
 import com.hym.weather.bean.WeatherBean;
 import com.hym.weather.db.DBManager;
 import com.hym.weather.utils.CircleTransform;
+import com.hym.weather.utils.RoundTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -106,7 +107,12 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
         String todayTemp = split[1].replace(")", "");
         tempTv.setText(todayTemp);
         //設置顯示天氣情況圖片
-        Picasso.with(getActivity()).load(todayDataBean.getDayPictureUrl()).into(dayIv);
+        Picasso.with(getActivity())
+                .load(todayDataBean.getDayPictureUrl())
+                .resize(120,120)
+                .centerCrop()
+                .transform(new RoundTransform(20))
+                .into(dayIv);
         //獲取未來三天的天氣情況，加載到layout當中
         List<WeatherBean.ResultsBean.WeatherDataBean> futureList = resultsBean.getWeather_data();
         futureList.remove(0);
