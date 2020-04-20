@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.hym.weather.db.DBManager;
 
-import static java.util.ResourceBundle.clearCache;
 
 public class MoreActivity extends AppCompatActivity implements View.OnClickListener {
 
