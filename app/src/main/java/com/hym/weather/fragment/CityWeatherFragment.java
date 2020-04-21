@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.hym.weather.R;
@@ -24,6 +25,7 @@ import com.hym.weather.bean.WeatherBean;
 import com.hym.weather.db.DBManager;
 import com.hym.weather.utils.CircleTransform;
 import com.hym.weather.utils.RoundTransform;
+import com.hym.weather.utils.loading.LoadingViewManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -64,9 +66,10 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onSuccess(String result) {
-        super.onSuccess(result);
+
         //解析並展示數據
         parseShowData(result);
+        super.onSuccess(result);
         //更新数据
         int i = DBManager.updateInfoByCity(city, result);
         if (i<=0) {
@@ -132,6 +135,9 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
             
         }
 
+        //强制关闭loading动画
+        LoadingViewManager.dismiss(true);
+
 
     }
 
@@ -157,7 +163,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
         colIndexTv.setOnClickListener(this);
         sportIndexTv.setOnClickListener(this);
         raysIndexTv.setOnClickListener(this);
-
+        tempTv.setOnClickListener(this);
 
     }
 
@@ -173,6 +179,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
                 msg = indexBean.getZs() + "\n" + indexBean.getDes();
                 builder.setMessage(msg);
                 builder.setPositiveButton("确定", null);
+                builder.create().show();
                 break;
             case R.id.frag_index_car:
                 builder.setTitle("洗车指数");
@@ -180,6 +187,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
                 msg = indexBean.getZs() + "\n" + indexBean.getDes();
                 builder.setMessage(msg);
                 builder.setPositiveButton("确定", null);
+                builder.create().show();
                 break;
             case R.id.frag_index_cold:
                 builder.setTitle("感冒指数");
@@ -187,6 +195,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
                 msg = indexBean.getZs() + "\n" + indexBean.getDes();
                 builder.setMessage(msg);
                 builder.setPositiveButton("确定", null);
+                builder.create().show();
                 break;
             case R.id.frag_index_sport:
                 builder.setTitle("运动指数");
@@ -194,6 +203,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
                 msg = indexBean.getZs() + "\n" + indexBean.getDes();
                 builder.setMessage(msg);
                 builder.setPositiveButton("确定", null);
+                builder.create().show();
                 break;
             case R.id.frag_index_light:
                 builder.setTitle("紫外线指数");
@@ -201,9 +211,16 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
                 msg = indexBean.getZs() + "\n" + indexBean.getDes();
                 builder.setMessage(msg);
                 builder.setPositiveButton("确定", null);
+                builder.create().show();
+                break;
+            case R.id.frag_tv_currenttemp:
+                Toast.makeText(getContext(),"更新成功！",Toast.LENGTH_SHORT).show();
+                String url = url1 + cityTv.getText() + url2;
+                //調用父類獲取數據的方法
+                loadData(url);
                 break;
         }
-        builder.create().show();
+
     }
 
     //换壁纸的函数

@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -27,6 +26,7 @@ import com.hym.weather.db.DBManager;
 import com.hym.weather.fragment.CityFragmentPagerAdapter;
 import com.hym.weather.fragment.CityWeatherFragment;
 import com.hym.weather.utils.LocationUtils;
+import com.hym.weather.utils.loading.LoadingViewManager;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -55,7 +55,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        LoadingViewManager.with(this).setHintText("加载中").setAnimationStyle("BallClipRotatePulseIndicator").build();
         if (cityList.size() == 0) {
+
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
             x.http().get(params, new Callback.CommonCallback<String>() {
                 @Override
                 public void onSuccess(String result) {
+//                    LoadingViewManager.dismiss(true);
                     CityNameBean cityNameBean = new Gson().fromJson(result, CityNameBean.class);
                     String cityName = cityNameBean.getResult().getAddressComponent().getCity();
                     cityList.add(cityName);
@@ -94,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
     }
 
     private void code() {
+
         //初始化空间
         initView();
         //设置壁纸
