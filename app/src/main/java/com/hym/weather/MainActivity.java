@@ -57,39 +57,43 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
         setContentView(R.layout.activity_main);
 //        LoadingViewManager.with(this).setHintText("加载中").setAnimationStyle("BallClipRotatePulseIndicator").build();
         if (cityList.size() == 0) {
-
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
             LocationUtils location = new LocationUtils(this);
-            Log.e("hymm","getLongitude" +location.getlocation().getLongitude());
-            String path = "https://api.map.baidu.com/geocoder?output=json&location=" + location.getlocation().getLatitude() +","+ location.getlocation().getLongitude() +"&ak=esNPFDwwsXWtsQfw4NMNmur1";
-            RequestParams params = new RequestParams(path);
-            x.http().get(params, new Callback.CommonCallback<String>() {
-                @Override
-                public void onSuccess(String result) {
+            if (location.getlocation() == null) {
+                cityList.add("北京");
+                code();//代码提取
+            }else {
+                Log.e("hymm","getLongitude" +location.getlocation().getLongitude());
+                String path = "https://api.map.baidu.com/geocoder?output=json&location=" + location.getlocation().getLatitude() +","+ location.getlocation().getLongitude() +"&ak=esNPFDwwsXWtsQfw4NMNmur1";
+                RequestParams params = new RequestParams(path);
+                x.http().get(params, new Callback.CommonCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
 //                    LoadingViewManager.dismiss(true);
-                    CityNameBean cityNameBean = new Gson().fromJson(result, CityNameBean.class);
-                    String cityName = cityNameBean.getResult().getAddressComponent().getCity();
-                    cityList.add(cityName);
-                    code();//代码提取
-                }
+                        CityNameBean cityNameBean = new Gson().fromJson(result, CityNameBean.class);
+                        String cityName = cityNameBean.getResult().getAddressComponent().getCity();
+                        cityList.add(cityName);
+                        code();//代码提取
+                    }
 
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
+                    @Override
+                    public void onError(Throwable ex, boolean isOnCallback) {
 
-                }
+                    }
 
-                @Override
-                public void onCancelled(CancelledException cex) {
+                    @Override
+                    public void onCancelled(CancelledException cex) {
 
-                }
+                    }
 
-                @Override
-                public void onFinished() {
+                    @Override
+                    public void onFinished() {
 
-                }
-            });
+                    }
+                });
+            }
         }else {
             code();
         }

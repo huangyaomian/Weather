@@ -37,9 +37,21 @@ public class LocationUtils {
         String serviceName = Context.LOCATION_SERVICE;
         //实例化一个LocationManager对象
         locationManager = (LocationManager) context.getSystemService(serviceName);
-        //provider的类型
-        String provider = LocationManager.GPS_PROVIDER;
 
+        //provider的类型
+        String provider;
+
+        //获取所有可用的位置提供器
+        List<String> providers = locationManager.getProviders(true);
+        if (providers.contains(LocationManager.GPS_PROVIDER)) {
+            //如果是GPS
+            provider = LocationManager.GPS_PROVIDER;
+        } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+            //如果是Network
+            provider = LocationManager.NETWORK_PROVIDER;
+        } else {
+            return null;
+        }
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_LOW);    //低精度   高精度：ACCURACY_FINE
         criteria.setAltitudeRequired(false);       //不要求海拔

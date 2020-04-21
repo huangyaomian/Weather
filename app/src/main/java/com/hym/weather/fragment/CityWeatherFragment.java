@@ -66,7 +66,6 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onSuccess(String result) {
-
         //解析並展示數據
         parseShowData(result);
         super.onSuccess(result);
