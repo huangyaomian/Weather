@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
 import android.text.style.BulletSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +44,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
     private SharedPreferences pref;
     private int bgNum;
     List<WeatherBean.ResultsBean.IndexBean> indexList;
-    private String url1 = "https://api.map.baidu.com/telematics/v3/weather?location=";
+    private String url1 = "http://api.map.baidu.com/telematics/v3/weather?location=";
     private String url2 = "&output=json&ak=FkPhtMBK0HTIQNh7gG4cNUttSTyr0nzo";
 
     String city;
@@ -58,7 +59,11 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
         //可以通過activity傳值獲取到當前fragment加載的是哪個地方的天氣情況
         Bundle bundle = getArguments();
         city = bundle.getString("city");
+        int isShow = bundle.getInt("isShow");
         String url = url1 + city + url2;
+        if ( isShow == 1) {
+            LoadingViewManager.with(this).setHintText("加载天气中").setAnimationStyle("BallClipRotatePulseIndicator").build();
+        }
         //調用父類獲取數據的方法
         loadData(url);
         return view;
@@ -66,6 +71,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onSuccess(String result) {
+        Log.d("hymmm",result);
         //解析並展示數據
         parseShowData(result);
         super.onSuccess(result);
@@ -118,6 +124,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
         //獲取未來三天的天氣情況，加載到layout當中
         List<WeatherBean.ResultsBean.WeatherDataBean> futureList = resultsBean.getWeather_data();
         futureList.remove(0);
+        futureLayout.removeAllViews();
         for (int i = 0; i < futureList.size(); i++) {
             View itemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_main_center, null);
             itemView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -133,10 +140,6 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
             Picasso.with(getActivity()).load(dataBean.getDayPictureUrl()).into(iIv);
             
         }
-
-        //强制关闭loading动画
-        LoadingViewManager.dismiss(true);
-
 
     }
 
@@ -215,6 +218,7 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
             case R.id.frag_tv_currenttemp:
                 Toast.makeText(getContext(),"更新成功！",Toast.LENGTH_SHORT).show();
                 String url = url1 + cityTv.getText() + url2;
+                LoadingViewManager.with(this).setHintText("加载天气中").setAnimationStyle("BallClipRotatePulseIndicator").build();
                 //調用父類獲取數據的方法
                 loadData(url);
                 break;

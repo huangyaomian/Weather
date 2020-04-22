@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        LoadingViewManager.with(this).setHintText("加载天气中").setAnimationStyle("BallClipRotatePulseIndicator").build();
+
 //        LoadingViewManager.with(this).setHintText("加载中").setAnimationStyle("BallClipRotatePulseIndicator").build();
         if (cityList.size() == 0) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -189,6 +191,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
             CityWeatherFragment cityWeatherFragment = new CityWeatherFragment();
             Bundle bundle = new Bundle();
             bundle.putString("city", cityList.get(i));
+            if (i == cityList.size() - 1) {
+                bundle.putInt("isShow",1);
+            }else {
+                bundle.putInt("isShow",2);
+            }
+
             cityWeatherFragment.setArguments(bundle);
             fragmentList.add(cityWeatherFragment);
         }

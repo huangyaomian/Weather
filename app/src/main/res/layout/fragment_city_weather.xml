@@ -19,7 +19,6 @@
                android:id="@+id/frag_tv_currenttemp"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:text="3℃"
                android:textSize="40dp"
                android:textStyle="bold"/>
            <TextView

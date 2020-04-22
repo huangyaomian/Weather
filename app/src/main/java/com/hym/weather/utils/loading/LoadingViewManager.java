@@ -71,6 +71,7 @@ public class LoadingViewManager {
     }
 
     public static boolean isShowing() {
+        Log.d("hymmm", String.valueOf("loadingViewContainer=" + loadingViewContainer != null));
         return loadingViewContainer != null && loadingViewContainer.isShowing();
     }
 
