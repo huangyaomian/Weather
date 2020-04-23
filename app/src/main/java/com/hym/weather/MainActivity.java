@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
 import com.google.gson.Gson;
 import com.hym.weather.bean.CityNameBean;
 import com.hym.weather.city_manager.CityManagerActivity;
@@ -26,7 +28,6 @@ import com.hym.weather.db.DBManager;
 import com.hym.weather.fragment.CityFragmentPagerAdapter;
 import com.hym.weather.fragment.CityWeatherFragment;
 import com.hym.weather.utils.LocationUtils;
-import com.hym.weather.utils.loading.LoadingViewManager;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
     private SharedPreferences pref;
     private int bgNum;
 
+    private String mLatitudeStr,mLongitudeStr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +70,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnClick
                 cityList.add("北京");
                 code();//代码提取
             }else {
-                Log.e("hymm","getLongitude" +location.getlocation().getLongitude());
-                String path = "https://api.map.baidu.com/geocoder?output=json&location=" + location.getlocation().getLatitude() +","+ location.getlocation().getLongitude() +"&ak=esNPFDwwsXWtsQfw4NMNmur1";
+                BDLocationListener listener = new BDLocationListener() {
+                    @Override
+                    public void onReceiveLocation(BDLocation bdLocation) {
+                        mLatitudeStr = Double.toString(bdLocation.getLatitude());
+                        mLongitudeStr = Double.toString(bdLocation.getLongitude());
+                    }
+                };
+                Log.e("hymm","getLongitude" +mLatitudeStr);
+                String path = "https://api.map.baidu.com/geocoder?output=json&location=" + mLatitudeStr +","+ mLongitudeStr +"&ak=esNPFDwwsXWtsQfw4NMNmur1";
                 RequestParams params = new RequestParams(path);
                 x.http().get(params, new Callback.CommonCallback<String>() {
                     @Override

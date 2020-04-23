@@ -8,6 +8,7 @@ import org.xutils.x;
 
 public class UniteApp extends Application {
 
+
     @Override
     public void onCreate() {
         super.onCreate();
